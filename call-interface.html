@@ -1,0 +1,44 @@
+<!-- call-interface.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Active Call</title>
+<style>
+body { font-family: sans-serif; text-align: center; background: #f5f5f5; }
+.container { max-width: 400px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 10px; }
+button { padding: 10px 20px; font-size: 18px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer; }
+#timer { font-size: 32px; margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Active Call</h2>
+<div id="callNumber"></div>
+<div id="timer">00:00</div>
+<br>
+<button onclick="endCall()">End Call</button>
+</div>
+<script>
+const callNumber = localStorage.getItem('currentCallNumber');
+document.getElementById('callNumber').innerText = 'Calling: ' + callNumber;
+let seconds = 0;
+const timerElement = document.getElementById('timer');
+const interval = setInterval(()=>{
+    seconds++;
+    let mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+    let secs = String(seconds % 60).padStart(2, '0');
+    timerElement.innerText = `${mins}:${secs}`;
+}, 1000);
+function endCall(){
+    clearInterval(interval);
+    const logs = JSON.parse(localStorage.getItem('callLogs') || '[]');
+    logs.push({ number: callNumber, duration: timerElement.innerText, time: new Date().toLocaleString() });
+    localStorage.setItem('callLogs', JSON.stringify(logs));
+    localStorage.removeItem('currentCallNumber');
+    window.location.href = 'call-logs.html';
+}
+</script>
+</body>
+</html>
