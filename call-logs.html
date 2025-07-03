@@ -1,0 +1,61 @@
+<!-- call-logs.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Call Logs</title>
+<style>
+body { font-family: sans-serif; text-align: center; background: #f5f5f5; }
+.container { max-width: 500px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 10px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 10px; border: 1px solid #ddd; }
+th { background: #007bff; color: white; }
+button { padding: 5px 10px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; }
+.delete { background: red; color: white; }
+.clear { background: orange; color: white; }
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Call Logs</h2>
+<table id="logsTable">
+<tr><th>Number</th><th>Duration</th><th>Time</th><th>Action</th></tr>
+</table>
+<br>
+<button class="clear" onclick="clearLogs()">Clear All Logs</button>
+<button onclick="window.location.href='index.html'">Back to Dialpad</button>
+</div>
+<script>
+function loadLogs(){
+    const logs = JSON.parse(localStorage.getItem('callLogs') || '[]');
+    const table = document.getElementById('logsTable');
+    logs.forEach((log, index)=>{
+        const row = table.insertRow();
+        row.insertCell(0).innerText = log.number;
+        row.insertCell(1).innerText = log.duration;
+        row.insertCell(2).innerText = log.time;
+        const delCell = row.insertCell(3);
+        const delBtn = document.createElement('button');
+        delBtn.innerText = 'Delete';
+        delBtn.className = 'delete';
+        delBtn.onclick = () => { deleteLog(index); };
+        delCell.appendChild(delBtn);
+    });
+}
+function deleteLog(index){
+    const logs = JSON.parse(localStorage.getItem('callLogs') || '[]');
+    logs.splice(index, 1);
+    localStorage.setItem('callLogs', JSON.stringify(logs));
+    location.reload();
+}
+function clearLogs(){
+    if(confirm('Clear all call logs?')){
+        localStorage.removeItem('callLogs');
+        location.reload();
+    }
+}
+loadLogs();
+</script>
+</body>
+</html>
