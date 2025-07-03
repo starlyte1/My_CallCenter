@@ -1,0 +1,66 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Call Center Dialpad</title>
+<style>
+body { font-family: sans-serif; text-align: center; background: #f5f5f5; }
+.container { max-width: 400px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 10px; }
+button { width: 60px; height: 60px; font-size: 20px; margin: 5px; border-radius: 50%; border: none; background: #007bff; color: white; cursor: pointer; }
+#number { font-size: 24px; margin: 10px; }
+.toast { background: #333; color: #fff; padding: 10px; border-radius: 5px; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: none; }
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Dialpad</h2>
+<div id="number"></div>
+<div>
+  <button onclick="press('1')">1</button>
+  <button onclick="press('2')">2</button>
+  <button onclick="press('3')">3</button><br>
+  <button onclick="press('4')">4</button>
+  <button onclick="press('5')">5</button>
+  <button onclick="press('6')">6</button><br>
+  <button onclick="press('7')">7</button>
+  <button onclick="press('8')">8</button>
+  <button onclick="press('9')">9</button><br>
+  <button onclick="press('*')">*</button>
+  <button onclick="press('0')">0</button>
+  <button onclick="press('#')">#</button><br>
+</div>
+<br>
+<button style="background: green;" onclick="call()">Call</button>
+<button style="background: red;" onclick="clearNumber()">Clear</button>
+</div>
+<div class="toast" id="toast">Calling...</div>
+<script>
+let currentNumber = '';
+function press(num) {
+    currentNumber += num;
+    document.getElementById('number').innerText = currentNumber;
+}
+function clearNumber() {
+    currentNumber = '';
+    document.getElementById('number').innerText = '';
+}
+function call() {
+    if(currentNumber.length < 3){
+        showToast('Enter a valid number');
+        return;
+    }
+    localStorage.setItem('currentCallNumber', currentNumber);
+    showToast('Calling ' + currentNumber);
+    setTimeout(()=>{ window.location.href = 'call-interface.html'; }, 1000);
+}
+function showToast(msg){
+    const toast = document.getElementById('toast');
+    toast.innerText = msg;
+    toast.style.display = 'block';
+    setTimeout(()=>{ toast.style.display = 'none'; }, 2000);
+}
+</script>
+</body>
+</html>
